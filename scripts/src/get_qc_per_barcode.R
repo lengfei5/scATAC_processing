@@ -1,13 +1,10 @@
-## filter barcodes with very low total uniq reads, given the fragment file and 
+## filter barcodes with very low total uniq reads, given the fragment file and
 ## the total reads cutoff
 library(data.table)
 library(Rcpp)
 library(Matrix)
 
-
-
 #sourceCpp(paste0('getOverlaps.cpp'))
-
 sourceCpp(code='
   #include <Rcpp.h>
   using namespace Rcpp;
@@ -19,14 +16,14 @@ sourceCpp(code='
       NumericVector end1 = reads["end"];
       NumericVector start2 = regions["start"];
       NumericVector end2 = regions["end"];
-          
+
       int n1 = start1.size(), n2 = start2.size();
       NumericVector midP1(n1), len1(n1), len2(n2), midP2(n2);
       IntegerVector over1(n1);
-          
+
       len1 = (end1 - start1)/2;
       midP1 = (end1 + start1)/2;
-          
+
       len2 = (end2 - start2)/2;
       midP2 = (end2 + start2)/2;
       int k = 0;
@@ -40,13 +37,10 @@ sourceCpp(code='
               }
           }
       }
-          
+
          return(over1);
     }'
 )
-
-
-
 
 
 args = commandArgs(T)
@@ -97,25 +91,25 @@ for(chr0 in chrs){
   }else{
     frags0[, 'peaks' := getOverlaps_read2AnyRegion(frags0, peaks0)]
   }
-  
+
   if(nrow(promoters0) == 0){
     frags0[, 'promoters' := 0]
   }else{
     frags0[, 'promoters' := getOverlaps_read2AnyRegion(frags0, promoters0)]
   }
-  
+
   if(nrow(tss0) == 0){
     frags0[, 'tss' := 0]
   }else{
     frags0[, 'tss' := getOverlaps_read2AnyRegion(frags0, tss0)]
   }
-  
+
   if(nrow(enhs0) == 0){
     frags0[, 'enhs' := 0]
   }else{
     frags0[, 'enhs' := getOverlaps_read2AnyRegion(frags0, enhs0)]
   }
-  
+
   fragsInRegion = rbind(fragsInRegion, frags0)
   message(paste(chr0, 'Done!'))
 }
@@ -138,6 +132,3 @@ fragsInRegion = fragsInRegion[!duplicated(fragsInRegion), ]
 
 write.table(fragsInRegion, file = out.frag.overlap.file, sep = '\t',
             row.names = F, quote = F)
-
-
-

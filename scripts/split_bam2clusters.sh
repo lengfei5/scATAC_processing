@@ -18,19 +18,19 @@ input_bam=${OUTPUT_DIR}/mapping_result/${OUTPUT_PREFIX}.positionsort.MAPQ${MAPQ}
 curr_dir=`dirname $0`
 
 
-
 ## split bam
-${PERL_PATH}/perl ${curr_dir}/src/split_bam2clusters.pl --cluster_file $ff --bam_file $input_bam \
-    --output_dir $output_dir --samtools_path $SAMTOOLS_PATH
+${PERL_PATH}/perl ${curr_dir}/src/split_bam2clusters.pl --cluster_file $ff --bam_file $input_bam --output_dir $output_dir --samtools_path $SAMTOOLS_PATH
 
 unset PYTHONPATH
-ncore=$(nproc --all)
-ncore=$((${ncore}/2))
+#ncore=$(nproc --all)
+#ncore=$((${ncore}/2))
+ncore=8
 for file0 in $(find $output_dir -name "*cluster*.bam")
 do
     echo "generate bw file..."
     fname_bw=${file0/.bam/.bw}
     ${SAMTOOLS_PATH}/samtools index -@ $ncore $file0
+
     ${DEEPTOOLS_PATH}/bamCoverage --numberOfProcessors max --normalizeUsing BPM \
          --bam $file0 --binSize 100 --skipNonCoveredRegions \
          --outFileName $fname_bw  &
@@ -46,6 +46,3 @@ mv ${output_dir}/*bw ${OUTPUT_DIR}/signal/
 mv ${output_dir}/*bedgraph ${OUTPUT_DIR}/signal/
 
 echo "The bam file was split into different clusters!"
-
-
-

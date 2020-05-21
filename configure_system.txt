@@ -6,18 +6,17 @@
 ## If not specified, the program will try to locate the executable
 ## using the 'which' command
 #######################################################################
-INSTALL_PREFIX = /mnt/isilon/tan_lab/yuw1/local_tools/bin
-PYTHON_PATH =  /cm/shared/apps_chop/python/3.6.3/bin
-R_PATH =  /cm/shared/apps_chop/R/3.6.0/lib64/R/bin
-SAMTOOLS_PATH = /mnt/isilon/tan_lab/yuw1/local_tools/bin/samtools-1.9
-DEEPTOOLS_PATH = /home/yuw1/.local/bin
-BEDTOOLS_PATH = /mnt/isilon/tan_lab/yuw1/local_tools/bin/bedtools2/bin
-BWA_PATH = /mnt/isilon/tan_lab/yuw1/local_tools/bin/bwa-0.7.17
-BOWTIE2_PATH = /home/yuw1/.local/bin/bowtie2.2.9
-BOWTIE_PATH = /home/yuw1/.local/bin/bowtie-1.2.2
-MACS2_PATH = /home/yuw1/.local/bin
-PERL_PATH = /usr/bin
-TRIM_GALORE_PATH = /mnt/isilon/tan_lab/yuw1/local_tools/bin/TrimGalore-0.6.3
-HINT_PATH = /home/yuw1/.local/bin 
-TRIMMOMATIC_PATH =  /mnt/isilon/tan_lab/yuw1/local_tools/bin/Trimmomatic-0.39
-GEM_PATH =  /mnt/isilon/tan_lab/yuw1/local_tools/bin/gem
+INSTALL_PREFIX = /groups/cochella/jiwang/scripts/scATAC_pro
+PYTHON_PATH =  /software/2020/software/python/3.6.6-foss-2018b/bin
+R_PATH = /software/2020/software/r/3.6.2-foss-2018b/bin
+SAMTOOLS_PATH = /groups/cochella/jiwang/local/bin/anaconda2/bin
+DEEPTOOLS_PATH = /users/jingkui.wang/.local/bin
+BEDTOOLS_PATH = /groups/cochella/jiwang/scripts/scATAC_pro/bedtools2/bin
+BWA_PATH = /groups/cochella/jiwang/local/bin/anaconda2/bin
+BOWTIE2_PATH = /software/2020/software/bowtie2/2.3.4.2-foss-2018b/bin/
+MACS2_PATH = /users/jingkui.wang/.local/bin
+PERL_PATH = /groups/cochella/jiwang/local/bin/anaconda2/bin
+TRIM_GALORE_PATH = /groups/cochella/jiwang/scripts/scATAC_pro/TrimGalore-0.6.3
+HINT_PATH =
+TRIMMOMATIC_PATH =  /groups/cochella/jiwang/scripts/scATAC_pro/Trimmomatic-0.39
+GEM_PATH =  /groups/cochella/jiwang/scripts/scATAC_pro/gem

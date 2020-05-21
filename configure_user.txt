@@ -20,9 +20,7 @@ TRIM_METHOD = trim_galore   ## one of trim_galore (default), Trimmomatic or not 
 
 ## adapter sequence should be speficied if Trimmomatic was used to trim
 ## you dont need to specify this if your TRIM_METHOD is trim_galore or not specified
-ADAPTER_SEQ = /mnt/isilon/tan_lab/yuw1/local_tools/Trimmomatic-0.39/adapters/NexteraPE-PE.fa
-
-
+## ADAPTER_SEQ = /mnt/isilon/tan_lab/yuw1/local_tools/Trimmomatic-0.39/adapters/NexteraPE-PE.fa
 
 
 #########################################################
@@ -31,19 +29,19 @@ ADAPTER_SEQ = /mnt/isilon/tan_lab/yuw1/local_tools/Trimmomatic-0.39/adapters/Nex
 ## have to specify options for bowtie/bowtie2, vice versa
 #########################################################
 
-MAPPING_METHOD = bwa  ## one of bwa/bowtie/bowtie2
+MAPPING_METHOD = bowtie2  ## one of bwa/bowtie/bowtie2
 
 ## extra mapping options (NO NEED TO SPECIFY INPUT FASTQS AND OUTPUT FILE/DIRECTORY)
-BWA_OPTS = -t 16
-BWA_INDEX = hg38_genome/hg38_genome.fa
+## BWA_OPTS = -t 16
+## BWA_INDEX = hg38_genome/hg38_genome.fa
 
-BOWTIE_OPTS = --quiet -p 16 
-BOWTIE_INDEX = bowtie-1.2.2/indexes/GRCh38/GRCh38_no_alt
+## BOWTIE_OPTS = --quiet -p 16
+## BOWTIE_INDEX = bowtie-1.2.2/indexes/GRCh38/GRCh38_no_alt
 
 BOWTIE2_OPTS = --end-to-end -p 16
-BOWTIE2_INDEX = bowtie2.2.9/indexes/GRCh38/GRCh38
+BOWTIE2_INDEX = /groups/cochella/jiwang/Genomes/C_elegans/ce11/ce11_index_4Bowtie/ce11
 
-MAPQ = 30  ## filter bam by MAPQ for downstream analysis 
+MAPQ = 30  ## filter bam by MAPQ for downstream analysis
 CELL_MAP_QC = TRUE  ## output mapping stats for cell barcodes
 
 
@@ -54,27 +52,25 @@ CELL_MAP_QC = TRUE  ## output mapping stats for cell barcodes
 PEAK_CALLER = MACS2  ## one of MACS2, BIN, and COMBINED
 
 ## provided extra options for macs2 (NO NEED TO SPECIFY -t, -n, -f -g here)
-MACS2_OPTS = -q 0.01  
+MACS2_OPTS = -q 0.05 --nomodel
 
 BIN_RESL = 5000    ## bin resolution in bp
-CHROM_SIZE_FILE = annotation/chrom_hg38.sizes
-
+CHROM_SIZE_FILE = /groups/cochella/jiwang/Genomes/C_elegans/ce11/ce11_sequence/ce11.chrom.sizes
 
 #######################################
-## annotation files(blacklist, promoters, 
+## annotation files(blacklist, promoters,
 ## enhancers, TSS, etc)
 #######################################
-BLACKLIST = annotation/hg38_blacklist.bed
-PROMOTERS = annotation/hg38_promoter.bed
-ENHANCERS = annotation/hg38_enhancer.bed
-TSS = annotation/hg38_tss.bed
-
+BLACKLIST = /groups/cochella/jiwang/Genomes/C_elegans/ce11/ce11_sequence/ce11_blacklist_liftovered.bed
+PROMOTERS = /groups/cochella/jiwang/annotations/ce11_promoter.bed
+ENHANCERS = /groups/cochella/jiwang/annotations/ce11_enhancers_Jaenes_et_al_elife_2018.bed
+TSS = /groups/cochella/jiwang/annotations/ce11_tss.bed
 
 
 ########################################
 ## cell calling
 ########################################
-CELL_CALLER = FILTER  ## EmptyDrop/cellranger/FILTER
+CELL_CALLER = EmptyDrop  ## EmptyDrop/cellranger/FILTER
 
 EmptyDrop_FDR = 0.001
 
@@ -83,11 +79,10 @@ EmptyDrop_FDR = 0.001
 FILTER_BC_CUTOFF = --min_uniq_frags 5000 --max_uniq_frags 50000 --frac_peak 0.5 --frac_tss 0.0 --frac_promoter 0 --frac_enhancer 0.0 --frac_mito 0.1
 
 
-
 ##############################################################################
 ## clustering and dimension reduction
 ## a seurat object will be created and saved, embeded information about
-## reduced dimensions, normalized data, and 
+## reduced dimensions, normalized data, and
 ## cluster labels ( extract by seuat_obj$active_cluster)
 ## Note if normalization method is tf-idf, then the matrix was presumely set as binary
 ##############################################################################
@@ -106,13 +101,13 @@ prepCello = TRUE  ## generate object for VisCello (for visualization)
 #######################################
 # compare two cluster, for example (as default): every single cluster vs the other
 RUN_DA = TRUE  ## run differential analysis or not
-group1 = 0    ## can be a cluster name (0, 1, 2,...), or 'all' 
+group1 = 0    ## can be a cluster name (0, 1, 2,...), or 'all'
 group2 = rest  ## can be cluster name or 'rest'
 test_use = wilcox  ## one of negbinom, LR, wilcox, t, DESeq2
 
 
 #######################################
-## GO analysis (need to do differential 
+## GO analysis (need to do differential
 ## analysis first)
 #######################################
 RUN_GO = TRUE ## run GO analysis after DA
@@ -126,7 +121,7 @@ GENOME_NAME = hg38
 
 
 #######################################
-## split bam by cluster 
+## split bam by cluster
 ## and output bw and bedgraph files
 #######################################
 SPLIT_BAM2CLUSTER = TRUE
@@ -143,4 +138,3 @@ cluster2_fp = 1
 
 RUN_Cicero = TRUE
 plotEPS = TRUE  ## print figures in eps format
-

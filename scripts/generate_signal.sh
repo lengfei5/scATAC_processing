@@ -13,8 +13,9 @@ mkdir -p $signal_dir
 
 
 # index bam file
-ncore=`nproc --all`
-ncore=$(($ncore - 1))
+#ncore=`nproc --all`
+#ncore=$(($ncore - 1))
+ncore=8
 
 if [[ ! -f ${input_bam}.bai ]];then
     ${SAMTOOLS_PATH}/samtools index -@ $ncore ${input_bam}.bam
@@ -24,17 +25,14 @@ echo "generate bw file..."
 unset PYTHONPATH
 ${DEEPTOOLS_PATH}/bamCoverage --numberOfProcessors max \
   --bam $input_bam --binSize 20 --skipNonCoveredRegions --normalizeUsing BPM \
-  --outFileName ${signal_dir}/${OUTPUT_PREFIX}.aggregated.bw &
-
+  --outFileName ${signal_dir}/${OUTPUT_PREFIX}.aggregated.bw
+# wait
 #echo "generate bedgraph..."
-${DEEPTOOLS_PATH}/bamCoverage --numberOfProcessors max \
-  --bam $input_bam --binSize 20 --skipNonCoveredRegions -- --normalizeUsing BPM \
-  --outFileFormat bedgraph --outFileName ${signal_dir}/${OUTPUT_PREFIX}.aggregated.bedgraph &
-wait
+#${DEEPTOOLS_PATH}/bamCoverage --numberOfProcessors max \
+#  --bam $input_bam --binSize 20 --skipNonCoveredRegions -- --normalizeUsing BPM \
+#  --outFileFormat bedgraph --outFileName ${signal_dir}/${OUTPUT_PREFIX}.aggregated.bedgraph &
 
-echo "generate count around TSS..."
+
+# echo "generate count around TSS..."
 ${DEEPTOOLS_PATH}/computeMatrix reference-point -S ${signal_dir}/${OUTPUT_PREFIX}.aggregated.bw -R $TSS \
     -a 1200 -b 1200 -o ${signal_dir}/${OUTPUT_PREFIX}.aggregated.mtx.gz
-
-
-

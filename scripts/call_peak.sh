@@ -13,7 +13,7 @@ mkdir -p $peaks_dir
 
 out_prefix=${OUTPUT_PREFIX}
 
-organism=hs
+organism=ce
 if [[ $GENOME_NAME =~ "mm" ]]; then
     organism=mm
 fi
@@ -25,12 +25,13 @@ if [ "${PEAK_CALLER}" = 'MACS2' ];then
 	unset PYTHONPATH
 	work_dir=${peaks_dir}/MACS2
 	mkdir -p $work_dir
-	${MACS2_PATH}/macs2 callpeak -t $input_bam --outdir $work_dir -n $out_prefix -f BAM -g $organism $MACS2_OPTS 
+	${MACS2_PATH}/macs2 callpeak -t $input_bam --outdir $work_dir -n $out_prefix -f BAM -g $organism $MACS2_OPTS
 	#${MACS2_PATH}/macs2 callpeak -t $input_bam --outdir $peaks_dir -f BAM $MACS2_OPTS --nomodel --extsize 147
-
+  
 	## remove peaks overlapped with blacklist
 	${BEDTOOLS_PATH}/bedtools intersect -a ${work_dir}/${out_prefix}_peaks.narrowPeak -b $BLACKLIST -v \
 	    > ${work_dir}/${out_prefix}_features_BlacklistRemoved.bed
+
 fi
 
 
@@ -47,11 +48,10 @@ if [ "${PEAK_CALLER}" = 'MUSIC' ];then
 	${MUSIC_PATH}/MUSIC -get_multiscale_broad_ERs -chip ${work_dir}/chip/dedup \
         -mapp /mnt/isilon/tan_lab/yuw1/run_scATAC-pro/Mappability_MAP/map50_hg38 \
         -l_mapp 50 -begin_l 1000 -end_l 16000 -step 1.5
- 
+
 
 	## remove peaks overlapped with blacklist
 fi
-
 
 
 if [ "${PEAK_CALLER}" = 'GEM' ];then
@@ -60,7 +60,7 @@ if [ "${PEAK_CALLER}" = 'GEM' ];then
 	mkdir -p $work_dir
  	${SAMTOOLS_PATH}/samtools view -@ 3 -h $input_bam > $work_dir/tmp.sam
  	java -Xmx40G -jar ${GEM_PATH}/gem.jar --t 3 --g ${GEM_PATH}/hg38.chrom.sizes --s 2000000000 --d ${GEM_PATH}/Read_Distribution_default.txt --expt $input_bam --f SAM --out $work_dir/${out_prefix}
-	sed -1 '1d' $work_dir/${out_prefix}/${out_prefix}.GPS_events.txt 
+	sed -1 '1d' $work_dir/${out_prefix}/${out_prefix}.GPS_events.txt
 	# extend the binding site +/-150bp as peak
 	cut -f1 ${wrok_dir}/${out_prefix}/${out_prefix}.GPS_events.txt | awk -F ":" '{print $1,"\t", $2}' | awk '{print "chr"$1, "\t", $2-150, "\t", $2+150}' > ${work_dir}/${out_prefix}_peaks.bed
 
@@ -83,5 +83,5 @@ if [ "${PEAK_CALLER}" = 'BIN' ];then
 	${BEDTOOLS_PATH}/bedtools intersect -a ${bin_file} -b $BLACKLIST -v \
 	    > ${work_dir}/${out_prefix}_features_BlacklistRemoved.bed
 fi
-   
+
 echo "Call peaks done !"
